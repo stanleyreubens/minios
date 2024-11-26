@@ -238,3 +238,6 @@ size_t ResourceManager::getAllocatedResourceCount() const {
 }
 
 } // namespace os_sim
+
+
+//This was committed by Sirak.
