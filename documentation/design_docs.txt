@@ -1,0 +1,110 @@
+# System Design Document
+
+## Architecture Overview
+
+### Core Components
+1. Process Management
+   - Process lifecycle control
+   - State transitions
+   - Priority-based scheduling
+
+2. Resource Management
+   - Resource allocation
+   - Deadlock detection
+   - Priority inheritance
+
+3. Thread Management
+   - Thread pool implementation
+   - Task scheduling
+   - Synchronization primitives
+
+4. IPC Mechanisms
+   - Shared memory
+   - Message queues
+   - Pipes
+
+## Design Patterns Used
+
+1. Singleton Pattern
+   - ProcessManager
+   - ResourceManager
+   - Global state management
+
+2. Factory Pattern
+   - Process creation
+   - Resource allocation
+
+3. Observer Pattern
+   - Process state changes
+   - Resource availability
+
+## Data Structures
+
+1. Process Table
+   ```cpp
+   std::unordered_map<ProcessID, std::shared_ptr<Process>>
+   ```
+
+2. Resource Allocation Table
+   ```cpp
+   std::unordered_map<ResourceID, ProcessID>
+   ```
+
+3. Thread Pool
+   ```cpp
+   std::vector<std::thread>
+   std::queue<std::function<void()>>
+   ```
+
+## Algorithms
+
+1. Process Scheduling
+   - Priority-based scheduling
+   - Round-robin for same priority
+
+2. Deadlock Detection
+   - Resource allocation graph
+   - Cycle detection using DFS
+
+3. Resource Allocation
+   - First-come-first-served
+   - Priority inheritance protocol
+
+## Performance Considerations
+
+1. Thread Safety
+   - Fine-grained locking
+   - Lock-free operations where possible
+   - Mutex hierarchies
+
+2. Memory Management
+   - Smart pointers for ownership
+   - Resource cleanup
+   - Memory leak prevention
+
+3. Scalability
+   - O(1) process creation
+   - O(log n) scheduling
+   - O(V+E) deadlock detection
+
+## Security Model
+
+1. Process Isolation
+   - Memory boundaries
+   - Resource access control
+
+2. IPC Security
+   - Named resources
+   - Access control lists
+
+## Error Handling
+
+1. Error Categories
+   - Resource errors
+   - Process errors
+   - System errors
+
+2. Recovery Mechanisms
+   - Resource cleanup
+   - Process termination
+   - System state recovery

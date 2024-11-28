@@ -45,3 +45,94 @@ Option B: Build with Command Line (MSBuild)
    Replace `Release` with `Debug` if you want a debug build.
 .
 
+
+# How to build on Mac
+
+# Install Homebrew if not already installed
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install CMake
+brew install cmake
+
+# Create the build script in your project root
+touch build.sh
+
+# Copy the content below for the build script
+
+```
+#!/bin/bash
+
+# build.sh - Build script for Mini OS Simulator
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
+echo -e "${GREEN}Building Mini OS Simulator...${NC}"
+
+# Create build directory if it doesn't exist
+mkdir -p build
+cd build
+
+# Configure with CMake
+echo -e "${GREEN}Configuring CMake...${NC}"
+cmake .. || {
+    echo -e "${RED}CMake configuration failed${NC}"
+    exit 1
+}
+
+# Build the project
+echo -e "${GREEN}Building project...${NC}"
+make || {
+    echo -e "${RED}Build failed${NC}"
+    exit 1
+}
+
+echo -e "${GREEN}Build successful!${NC}"
+echo -e "You can run the simulator with: ${GREEN}./minios${NC}"
+```
+# Make it executable
+chmod +x build.sh
+
+# Navigate to build directory
+cd build
+
+# Run the simulator
+./minios
+
+# How to build on FreeBSD
+
+# Install required packages
+pkg install cmake
+pkg install gmake
+pkg install git
+pkg install llvm
+pkg install googletest
+
+# Create a build script for FreeBSD freebsd_build.sh and copy the lines below to the file 
+```
+#!/bin/sh
+
+# Create build directory
+mkdir -p build
+cd build
+
+# Configure with CMake
+cmake ..
+
+# Build using gmake (FreeBSD's version of make)
+gmake
+
+# Run tests
+gmake test
+```
+
+# make the script executable
+chmod +x freebsd_build.sh
+
+# Build the project
+./freebsd_build.sh
+
+# Run the simulator
+./build/minios

@@ -1,0 +1,105 @@
+# API Documentation
+
+## Core Components
+
+### Process Management API
+```cpp
+class Process {
+    ProcessID getPID() const;
+    void setState(ProcessState state);
+    ProcessState getState() const;
+    Priority getPriority() const;
+    const std::string& getName() const;
+};
+
+class ProcessManager {
+    static ProcessManager& getInstance();
+    std::shared_ptr<Process> createProcess(const std::string& name, Priority priority);
+    ErrorCode terminateProcess(ProcessID pid);
+    std::vector<ProcessID> listProcesses() const;
+};
+```
+
+### Resource Management API
+```cpp
+class ResourceManager {
+    static ResourceManager& getInstance();
+    ResourceID createResource(ResourceType type);
+    ErrorCode allocateResource(ProcessID pid, ResourceID resource_id);
+    ErrorCode releaseResource(ProcessID pid, ResourceID resource_id);
+    bool detectDeadlock();
+};
+```
+
+### Thread Management API
+```cpp
+class ThreadPool {
+    explicit ThreadPool(size_t num_threads);
+    template<class F, class... Args>
+    auto enqueue(F&& f, Args&&... args) -> std::future<...>;
+    void shutdown();
+};
+```
+
+### IPC API
+```cpp
+class SharedMemory {
+    SharedMemory(const std::string& name, size_t size);
+    bool write(const void* data, size_t size, size_t offset);
+    bool read(void* buffer, size_t size, size_t offset);
+};
+
+class MessageQueue {
+    void send(const IPCMessage& message);
+    IPCError receive(IPCMessage& message);
+};
+```
+
+## Usage Examples
+
+### Process Creation and Management
+```cpp
+auto& pm = ProcessManager::getInstance();
+auto process = pm.createProcess("test_process", 10);
+process->setState(ProcessState::READY);
+```
+
+### Resource Allocation
+```cpp
+auto& rm = ResourceManager::getInstance();
+rm.allocateResource(process->getPID(), resource_id);
+if (rm.detectDeadlock()) {
+    rm.resolveDeadlock();
+}
+```
+
+### Thread Pool Usage
+```cpp
+ThreadPool pool(4);
+auto future = pool.enqueue([](int x) { return x * 2; }, 21);
+int result = future.get();
+```
+
+### IPC Operations
+```cpp
+SharedMemory shm("shared_region", 1024);
+shm.write(data, size);
+
+MessageQueue mq;
+mq.send(message);
+```
+
+## Error Handling
+```cpp
+enum class ErrorCode {
+    SUCCESS,
+    RESOURCE_NOT_AVAILABLE,
+    PROCESS_NOT_FOUND,
+    INVALID_STATE
+};
+```
+
+## Thread Safety Notes
+- All manager classes are thread-safe singletons
+- Resource operations use mutex protection
+- IPC operations are atomic and thread-safe

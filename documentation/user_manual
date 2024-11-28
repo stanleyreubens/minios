@@ -1,0 +1,107 @@
+# Mini Operating System Simulator - User Manual
+
+## Getting Started
+
+### Installation
+```bash
+git clone <repository>
+cd minios
+mkdir build && cd build
+cmake ..
+make
+```
+
+### Basic Usage
+```bash
+./minios
+```
+
+## Available Commands
+
+### Process Management
+```bash
+create <name> [priority]  # Create new process
+terminate <pid>          # Terminate process
+list                    # List all processes
+info <pid>              # Show process info
+```
+
+### Resource Management
+```bash
+allocate <pid> <res_id>  # Allocate resource
+release <pid> <res_id>   # Release resource
+resources               # List resources
+```
+
+### System Control
+```bash
+status                  # Show system status
+deadlock                # Check for deadlocks
+exit                    # Exit simulator
+```
+
+## Example Workflows
+
+### 1. Basic Process Creation
+```bash
+os_sim> create process1 10
+os_sim> list
+os_sim> info 0
+```
+
+### 2. Resource Allocation
+```bash
+os_sim> create process1 10
+os_sim> allocate 0 0
+os_sim> status
+```
+
+### 3. Deadlock Scenario
+```bash
+os_sim> create p1 10
+os_sim> create p2 5
+os_sim> allocate 0 0
+os_sim> allocate 1 1
+os_sim> allocate 0 1
+os_sim> deadlock
+```
+
+## Troubleshooting
+
+### Common Issues
+1. Resource Allocation Failures
+   - Check if resource exists
+   - Verify resource isn't already allocated
+   - Check for deadlocks
+
+2. Process Creation Issues
+   - Verify priority range (0-99)
+   - Check system resource limits
+   - Ensure unique process names
+
+3. System Hangs
+   - Check for deadlocks
+   - Monitor resource usage
+   - Review process states
+
+### Error Messages
+- "Resource not available": Resource is already allocated
+- "Process not found": Invalid PID
+- "Invalid state transition": Illegal process state change
+
+## Best Practices
+
+1. Process Management
+   - Use meaningful process names
+   - Assign appropriate priorities
+   - Monitor process states
+
+2. Resource Usage
+   - Release resources promptly
+   - Avoid resource hoarding
+   - Check for deadlocks regularly
+
+3. System Monitoring
+   - Use status command regularly
+   - Monitor resource allocation
+   - Check process states
