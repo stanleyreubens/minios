@@ -136,3 +136,8 @@ chmod +x freebsd_build.sh
 
 # Run the simulator
 ./build/minios
+
+# DOCUMENTATION FILES CAN BE FOUND IN THE DOCUMENTATION FOLDER /DOCUMENTATION
+
+# Here's a checklist link of the completed requirements
+https://scandalous-droplet-fe4.notion.site/COSC-514-PROJECT-CHECKLIST-146477d01f628041af87faea91d75176
