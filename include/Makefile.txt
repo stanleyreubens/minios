@@ -1,0 +1,224 @@
+# Makefile
+CXX = g++
+CXXFLAGS = -std=c++17 -Wall -Wextra -pedantic -I./include
+LDFLAGS = -lpthread
+
+# Debug flags
+DEBUG_FLAGS = -g -DDEBUG
+RELEASE_FLAGS = -O3 -DNDEBUG
+
+# Directories
+SRC_DIR = src
+INC_DIR = include
+BUILD_DIR = build
+TEST_DIR = test
+DOC_DIR = doc
+
+# Find all source files
+SRCS = $(shell find $(SRC_DIR) -name '*.cpp')
+OBJS = $(SRCS:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
+
+# Test sources
+TEST_SRCS = $(shell find $(TEST_DIR) -name '*.cpp')
+TEST_OBJS = $(TEST_SRCS:$(TEST_DIR)/%.cpp=$(BUILD_DIR)/test/%.o)
+
+# Targets
+TARGET = $(BUILD_DIR)/minios
+TEST_TARGET = $(BUILD_DIR)/test_minios
+
+.PHONY: all clean debug release test docs install
+
+all: release
+
+# Create build directory structure
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)/process
+	mkdir -p $(BUILD_DIR)/thread
+	mkdir -p $(BUILD_DIR)/resource
+	mkdir -p $(BUILD_DIR)/ipc
+	mkdir -p $(BUILD_DIR)/test
+
+# Compile source files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Compile test files
+$(BUILD_DIR)/test/%.o: $(TEST_DIR)/%.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Link program
+$(TARGET): $(BUILD_DIR) $(OBJS)
+	$(CXX) $(OBJS) $(LDFLAGS) -o $@
+
+# Link tests
+$(TEST_TARGET): $(BUILD_DIR) $(OBJS) $(TEST_OBJS)
+	$(CXX) $(OBJS) $(TEST_OBJS) $(LDFLAGS) -lgtest -lgtest_main -o $@
+
+debug: CXXFLAGS += $(DEBUG_FLAGS)
+debug: $(TARGET)
+
+release: CXXFLAGS += $(RELEASE_FLAGS)
+release: $(TARGET)
+
+test: $(TEST_TARGET)
+	./$(TEST_TARGET)
+
+clean:
+	rm -rf $(BUILD_DIR)
+
+install: release
+	install -d $(DESTDIR)/usr/local/bin
+	install $(TARGET) $(DESTDIR)/usr/local/bin/minios
+
+# README.md
+# Mini Operating System Simulator
+
+## Overview
+This project implements a mini operating system simulator that demonstrates key OS concepts including process management, thread synchronization, resource allocation, and deadlock detection.
+
+## Features
+- Process and Thread Management
+- Resource Allocation
+- Deadlock Detection and Resolution
+- Inter-Process Communication (IPC)
+- Thread Pool Implementation
+- Priority-based Scheduling
+
+## Building the Project
+
+### Prerequisites
+- C++17 compatible compiler
+- CMake 3.10 or higher
+- pthread library
+- Google Test (for unit tests)
+
+### Build Instructions
+```bash
+# Create build directory
+mkdir build && cd build
+
+# Configure build
+cmake ..
+
+# Build the project
+make
+
+# Run tests
+make test
+
+# Install
+sudo make install
+```
+
+## Project Structure
+```
+.
+├── include/             # Header files
+│   ├── process/        # Process management
+│   ├── thread/         # Thread management
+│   ├── resource/       # Resource management
+│   └── ipc/           # Inter-process communication
+├── src/                # Source files
+├── test/               # Unit tests
+├── doc/                # Documentation
+└── scripts/            # Build and utility scripts
+```
+
+## Usage Example
+```cpp
+// Create and manage processes
+auto& pm = ProcessManager::getInstance();
+auto process = pm.createProcess("test_process", 5);
+
+// Allocate resources
+auto& rm = ResourceManager::getInstance();
+rm.allocateResource(process->getPID(), resource_id);
+
+// Use thread pool
+ThreadPool pool(4);
+auto future = pool.enqueue([](int x) { return x * 2; }, 21);
+int result = future.get();
+```
+
+## Command-Line Interface
+The simulator provides a command-line interface with the following commands:
+
+- `help` - Display available commands
+- `create <name> [priority]` - Create a new process
+- `terminate <pid>` - Terminate a process
+- `list` - List all processes
+- `info <pid>` - Display process information
+- `allocate <pid> <res_id>` - Allocate a resource
+- `release <pid> <res_id>` - Release a resource
+- `deadlock` - Check for deadlocks
+- `status` - Display system status
+- `exit` - Exit simulator
+
+## API Documentation
+
+### Process Management
+```cpp
+class Process {
+    ProcessID getPID() const;
+    ProcessState getState() const;
+    void setState(ProcessState state);
+    Priority getPriority() const;
+    void setPriority(Priority priority);
+};
+
+class ProcessManager {
+    static ProcessManager& getInstance();
+    std::shared_ptr<Process> createProcess(const std::string& name, Priority priority);
+    ErrorCode terminateProcess(ProcessID pid);
+    void scheduleProcesses();
+};
+```
+
+### Thread Management
+```cpp
+class ThreadPool {
+    explicit ThreadPool(size_t num_threads);
+    template<class F, class... Args>
+    auto enqueue(F&& f, Args&&... args) -> std::future<...>;
+    void shutdown();
+};
+```
+
+### Resource Management
+```cpp
+class ResourceManager {
+    static ResourceManager& getInstance();
+    ErrorCode allocateResource(ProcessID pid, ResourceID resource_id);
+    ErrorCode releaseResource(ProcessID pid, ResourceID resource_id);
+    bool detectDeadlock();
+    void resolveDeadlock();
+};
+```
+
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+# .github/pull_request_template.md
+## Description
+Please include a summary of the changes and the related issue.
+
+## Type of change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+
+## Checklist
+- [ ] I have added tests
+- [ ] All tests pass
+- [ ] I have updated documentation
+- [ ] I have added appropriate comments
+- [ ] I have reviewed my own code
