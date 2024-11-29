@@ -31,19 +31,21 @@ Using Command Prompt
    cmake .. -G "Visual Studio 17 2022"
    ```
    Replace `"Visual Studio 17 2022"` with your installed version if different.
-Step 3: Build the Project
-Option B: Build with Command Line (MSBuild)
-1. Open the **Developer Command Prompt for Visual Studio**.
-2. Navigate to the `build` directory:
+
+# Step 3: Build the Project
+ Build with Command Line (MSBuild)
+
+1. Navigate to the `build` directory:
    ```bash
    cd path\to\minios\build
    ```
-3. Run the build command:
+2. Run the build command:
    ```bash
    msbuild minios.sln /p:Configuration=Release
    ```
    Replace `Release` with `Debug` if you want a debug build.
-.
+
+Note: make sure you add the path to your visual studio to your environment variables
 
 
 # How to build on Mac
