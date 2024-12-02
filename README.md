@@ -106,11 +106,13 @@ cd build
 # How to build on FreeBSD
 
 # Install required packages
+```
 pkg install cmake
 pkg install gmake
 pkg install git
 pkg install llvm
 pkg install googletest
+```
 
 # Create a build script for FreeBSD freebsd_build.sh and copy the lines below to the file 
 ```
