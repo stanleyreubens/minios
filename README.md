@@ -44,22 +44,34 @@ Using Command Prompt
    msbuild minios.sln /p:Configuration=Release
    ```
    Replace `Release` with `Debug` if you want a debug build.
+3. ```cd path\to\minios\build``` To run the executable program.
 
 Note: make sure you add the path to your visual studio to your environment variables
 
 
 # How to build on Mac
 
-# Install Homebrew if not already installed
+Install Homebrew if not already installed
+```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
 
-# Install CMake
+1. Install CMake
+```
 brew install cmake
+```
 
-# Create the build script in your project root
+2. Go to the project folder
+```
+cd minios
+```
+
+3. Create the build script in your project root
+```
 touch build.sh
+```
 
-# Copy the content below for the build script
+4. Copy the content below for the build script
 
 ```
 #!/bin/bash
@@ -94,18 +106,22 @@ make || {
 echo -e "${GREEN}Build successful!${NC}"
 echo -e "You can run the simulator with: ${GREEN}./minios${NC}"
 ```
-# Make it executable
+5. Make it executable
+```
 chmod +x build.sh
+```
 
-# Navigate to build directory
+6. Navigate to build directory
+```
 cd build
+```
 
-# Run the simulator
+7. Run the simulator
 ./minios
 
 # How to build on FreeBSD
 
-# Install required packages
+1. Install required packages
 ```
 pkg install cmake
 pkg install gmake
@@ -114,7 +130,7 @@ pkg install llvm
 pkg install googletest
 ```
 
-# Create a build script for FreeBSD freebsd_build.sh and copy the lines below to the file 
+2. Create a build script for FreeBSD freebsd_build.sh and copy the lines below to the file 
 ```
 #!/bin/sh
 
@@ -132,13 +148,13 @@ gmake
 gmake test
 ```
 
-# make the script executable
+3. make the script executable
 chmod +x freebsd_build.sh
 
-# Build the project
+4. Build the project
 ./freebsd_build.sh
 
-# Run the simulator
+5. Run the simulator
 ./build/minios
 
 # DOCUMENTATION FILES CAN BE FOUND IN THE DOCUMENTATION FOLDER /DOCUMENTATION
