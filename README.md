@@ -153,15 +153,40 @@ gmake test
 ```
 
 3. make the script executable
+
 chmod +x freebsd_build.sh
 
 4. Build the project
+
 ./freebsd_build.sh
 
 5. Run the simulator
+
 ./build/minios
 
 # DOCUMENTATION FILES CAN BE FOUND IN THE DOCUMENTATION FOLDER /DOCUMENTATION
 
 # Here's a checklist link of the completed requirements
 https://scandalous-droplet-fe4.notion.site/COSC-514-PROJECT-CHECKLIST-146477d01f628041af87faea91d75176
+
+# User Expamles
+```
+# First check resources
+os_sim> resources
+
+# Create some processes
+os_sim> create process1 10
+os_sim> create process2 5
+
+# Try allocating resources
+os_sim> allocate 0 0
+os_sim> allocate 1 1
+
+# Check status
+os_sim> status
+
+# Try creating a deadlock
+os_sim> allocate 0 1
+os_sim> allocate 1 0
+os_sim> deadlock
+```
