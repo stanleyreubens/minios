@@ -169,7 +169,7 @@ chmod +x freebsd_build.sh
 # Here's a checklist link of the completed requirements
 https://scandalous-droplet-fe4.notion.site/COSC-514-PROJECT-CHECKLIST-146477d01f628041af87faea91d75176
 
-# User Expamles
+# Useage Expamles
 ```
 # First check resources
 os_sim> resources
@@ -189,4 +189,166 @@ os_sim> status
 os_sim> allocate 0 1
 os_sim> allocate 1 0
 os_sim> deadlock
+```
+
+# Design Decisions
+
+## 1. Architecture Decisions
+```
+1.1 Modular Design
+    - Separate components for process, thread, and resource management
+    - Clear separation of concerns
+    - Easy to extend and maintain
+    Rationale: Facilitates maintainability and testing
+
+1.2 Singleton Pattern
+    - Used for ProcessManager and ResourceManager
+    - Ensures single point of control
+    - Thread-safe implementation
+    Rationale: Centralized resource management and control
+
+1.3 Thread Pool Design
+    - Fixed-size thread pool
+    - Task queue-based work distribution
+    - FIFO scheduling
+    Rationale: Efficient thread reuse and management
+
+1.4 Resource Management
+    - Hash table-based resource tracking
+    - Graph-based deadlock detection
+    - Priority inheritance for deadlock prevention
+    Rationale: Efficient resource allocation and deadlock handling
+```
+
+## 2. Implementation Decisions
+```
+2.1 Data Structures
+    - std::unordered_map for O(1) lookups
+    - std::vector for ordered collections
+    - std::queue for task management
+    Rationale: Balance between performance and functionality
+
+2.2 Synchronization
+    - Mutex-based synchronization
+    - Condition variables for thread coordination
+    - Fine-grained locking
+    Rationale: Prevent race conditions while minimizing contention
+
+2.3 Error Handling
+    - Enum-based error codes
+    - Exception handling for critical errors
+    - Detailed error reporting
+    Rationale: Clear error communication and handling
+
+2.4 Memory Management
+    - RAII principles
+    - Smart pointers for resource management
+    - Clear ownership semantics
+    Rationale: Prevent memory leaks and ensure cleanup
+```
+
+# Known Limitations
+
+## 1. Technical Limitations
+```
+1.1 Scalability
+    - Fixed thread pool size
+    - No dynamic resource creation
+    - Limited process priority levels
+
+1.2 Performance
+    - Potential mutex contention under high load
+    - O(n log n) scheduling complexity
+    - Memory overhead from data structures
+
+1.3 Features
+    - No virtual memory management
+    - Simplified process scheduling
+    - Basic IPC mechanisms only
+```
+
+## 2. Implementation Limitations
+```
+2.1 Process Management
+    - No process hierarchies
+    - Limited process states
+    - No process migration
+
+2.2 Resource Management
+    - Simple deadlock resolution
+    - No resource priorities
+    - Limited resource types
+
+2.3 Threading
+    - No thread priorities
+    - Fixed thread pool size
+    - Limited thread states
+```
+
+## 3. Architectural Limitations
+```
+3.1 Design
+    - Single-system design (no networking)
+    - No distributed capabilities
+    - Limited extensibility points
+
+3.2 Security
+    - No access control
+    - No process isolation
+    - No security features
+
+3.3 Monitoring
+    - Basic performance metrics only
+    - Limited debugging capabilities
+    - No system-wide monitoring
+```
+
+# References Used
+## 1. Operating Systems Concepts
+```
+1.1 Books
+    - "Operating System Concepts" by Silberschatz, Galvin, and Gagne
+    - "Modern Operating Systems" by Tanenbaum
+    - "Operating Systems: Three Easy Pieces" by Arpaci-Dusseau
+
+1.2 Papers
+    - "The Deadlock Problem in Operating Systems"
+    - "Priority Inheritance Protocols"
+    - "Resource Allocation Graphs"
+```
+
+## 2. Implementation References
+```
+2.1 C++ Standards
+    - C++17 Standard Library
+    - STL Documentation
+    - C++ Concurrency in Action (Anthony Williams)
+
+2.2 Design Patterns
+    - "Design Patterns" by Gang of Four
+    - "Pattern-Oriented Software Architecture"
+    - "C++ Software Design Patterns"
+
+2.3 Best Practices
+    - Google C++ Style Guide
+    - C++ Core Guidelines
+    - Modern C++ Design (Andrei Alexandrescu)
+```
+
+## 3. Online Resources
+```
+3.1 Documentation
+    - cppreference.com
+    - C++ Standards Committee papers
+    - Boost documentation
+
+3.2 Articles
+    - Thread Pool implementations
+    - Deadlock detection algorithms
+    - Process scheduling algorithms
+
+3.3 Research Papers
+    - "Implementation of Process Management in Operating Systems"
+    - "Resource Allocation Techniques"
+    - "Thread Pool Patterns for Service Oriented Architectures"
 ```
