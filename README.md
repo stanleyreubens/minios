@@ -110,6 +110,10 @@ echo -e "You can run the simulator with: ${GREEN}./minios${NC}"
 ```
 chmod +x build.sh
 ```
+6. run this to build the minios
+```
+./build.sh
+```
 
 6. Navigate to build directory
 ```
