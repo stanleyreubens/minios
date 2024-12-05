@@ -26,6 +26,7 @@ public:
     void shutdown();
 
 private:
+    bool inCalculatorMode_ = false; // Tracks if user is interacting with the calculator
     Simulator() = default;
     ~Simulator() = default;
     Simulator(const Simulator&) = delete;
@@ -52,7 +53,10 @@ private:
     void handleReleaseResource(const std::vector<std::string>& args);
     void handleCheckDeadlock();
     void handleSystemStatus();
-    void handleListResources();  // Add this line
+    void handleListResources();  
+    void handleStartCalculator(const std::vector<std::string>& args);
+    void handleSuspendProcess(const std::vector<std::string>& args);
+    void handleResumeProcess(const std::vector<std::string>& args);
 };
 
 } // namespace os_sim
