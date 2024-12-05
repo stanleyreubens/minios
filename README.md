@@ -189,7 +189,19 @@ os_sim> status
 os_sim> allocate 0 1
 os_sim> allocate 1 0
 os_sim> deadlock
-```
+
+# Start the calculator process
+os_sim> calculator
+
+# Perform calculations within the calculator
+> 5 + 3
+Result: 8
+> 10 ^ 2
+Result: 100
+> exit
+
+# Exit back to the main simulator
+os_sim>
 
 # Design Decisions
 
