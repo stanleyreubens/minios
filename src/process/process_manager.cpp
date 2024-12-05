@@ -59,14 +59,6 @@ ErrorCode ProcessManager::resumeProcess(ProcessID pid) {
 void ProcessManager::scheduleProcesses() {
     std::lock_guard<std::mutex> lock(manager_mutex_);
     
-    // First, handle any running process
-    for (const auto& [pid, process] : processes_) {
-        if (process->getState() == ProcessState::RUNNING) {
-            process->setState(ProcessState::READY);
-            break;  // Only one process should be running
-        }
-    }
-    
     // Get all ready processes
     std::vector<std::shared_ptr<Process>> ready_processes;
     for (const auto& [pid, process] : processes_) {
@@ -79,14 +71,21 @@ void ProcessManager::scheduleProcesses() {
         return;
     }
     
-    // Sort by priority
+    // Sort by priority (higher priority first)
     std::sort(ready_processes.begin(), ready_processes.end(),
         [](const auto& a, const auto& b) {
             return a->getPriority() > b->getPriority();
         });
     
     // Set highest priority process to RUNNING
-    ready_processes[0]->setState(ProcessState::RUNNING);
+    // and ensure others are READY
+    for (size_t i = 0; i < ready_processes.size(); ++i) {
+        if (i == 0) {
+            ready_processes[i]->setState(ProcessState::RUNNING);
+        } else {
+            ready_processes[i]->setState(ProcessState::READY);
+        }
+    }
 }
 
 std::shared_ptr<Process> ProcessManager::getProcess(ProcessID pid) {

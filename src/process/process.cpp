@@ -37,19 +37,12 @@ void Process::setState(ProcessState new_state) {
     std::lock_guard<std::mutex> lock(process_mutex_);
     
     if (!canTransitionTo(new_state)) {
-        throw std::runtime_error("Invalid state transition from " + 
-                               std::to_string(static_cast<int>(state_)) + 
-                               " to " + std::to_string(static_cast<int>(new_state)));
+        throw std::runtime_error("Invalid state transition");
     }
     
-    ProcessState old_state = state_;
     state_ = new_state;
-    
-    if (old_state != new_state) {
-        stats_.context_switches++;
-        updateStats();
-        state_cv_.notify_all();
-    }
+    updateStats();
+    state_cv_.notify_all();
 }
 
 void Process::setPriority(Priority new_priority) {
@@ -119,10 +112,10 @@ void Process::terminate() {
 }
 
 void Process::updateStats() {
-
+    // Update process statistics
     stats_.context_switches++;
     
-
+    // Update CPU time if process was running
     if (state_ == ProcessState::RUNNING) {
         static auto last_update = std::chrono::steady_clock::now();
         auto now = std::chrono::steady_clock::now();
@@ -132,26 +125,31 @@ void Process::updateStats() {
         last_update = now;
     }
     
-    stats_.memory_used = allocated_resources_.size() * 1024;
+    // Update memory usage based on allocated resources
+    stats_.memory_used = allocated_resources_.size() * 1024; // Simple estimation
 }
 
 bool Process::canTransitionTo(ProcessState new_state) const {
     switch (state_) {
         case ProcessState::NEW:
             return new_state == ProcessState::READY;
+            
         case ProcessState::READY:
             return new_state == ProcessState::RUNNING || 
-                   new_state == ProcessState::WAITING ||
-                   new_state == ProcessState::TERMINATED;  
+                   new_state == ProcessState::TERMINATED;
+            
         case ProcessState::RUNNING:
             return new_state == ProcessState::READY || 
                    new_state == ProcessState::WAITING || 
                    new_state == ProcessState::TERMINATED;
+            
         case ProcessState::WAITING:
-            return new_state == ProcessState::READY ||
-                   new_state == ProcessState::TERMINATED;  
+            return new_state == ProcessState::READY || 
+                   new_state == ProcessState::TERMINATED;
+            
         case ProcessState::TERMINATED:
-            return false;
+            return false; // Cannot transition from terminated state
+            
         default:
             return false;
     }
