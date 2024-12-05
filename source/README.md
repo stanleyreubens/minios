@@ -31,9 +31,12 @@ Requires Free BSD 12.1
 ### Installing & Executing program
 
 Steps:
--Navigate to the folder scheduler
--Run the file cpuSchedulerDriver.cpp
-
+-Navigate to the folder scheduler or 
+ navigate to path minios/source/scheduler/
+-Run the file cpuSchedulerDriver.cpp using command mentioned below:
+ > clang++ cpuSchedulerDriver.cpp -o scheduler
+ > ./scheduler
+ 
 ## Version History
 
 * 1.0
