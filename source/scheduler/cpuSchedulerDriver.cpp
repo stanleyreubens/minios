@@ -16,7 +16,8 @@ int main(int argc, char* argv[]) {
 	int processCount;
 	int waitTime=0;
 	int turnAroundTime=0;
-	
+    float avgWaitTime=0, avgTurnAroundTime=0;
+		
 	cout<< endl << "Real Time CPU Scheduling Simulator:" << endl; 
 	cout<< endl << "Menu:";
 	cout<< endl << "-----------------------------------------------------------------"; 
@@ -75,17 +76,25 @@ int main(int argc, char* argv[]) {
 			}
 			
 			cout<< endl << endl << "-----------------------------------------------------------------"; 
-			cout<< endl << "Waiting time & turnaround time:" << endl;
+			cout<< endl << "Process Schedule, Waiting time & turnaround time:" << endl;
 			
 			for(int fcfsProcessCounter=0; fcfsProcessCounter<processCount; fcfsProcessCounter++) {
 				
 				cout << endl << "Process id: " << fcfsReadyQueueItem[fcfsProcessCounter].processId;				
 				turnAroundTime = turnAroundTime + fcfsReadyQueueItem[fcfsProcessCounter].burstTime;
+				avgWaitTime = avgWaitTime + waitTime;
+				avgTurnAroundTime = avgTurnAroundTime + turnAroundTime;
 				cout << endl << "Waiting time in milliseconds: " << waitTime;
 				cout << endl << "Turnaround time in milliseconds: " << turnAroundTime;
-				waitTime = waitTime + fcfsReadyQueueItem[fcfsProcessCounter].burstTime;
-								
+				waitTime = waitTime + fcfsReadyQueueItem[fcfsProcessCounter].burstTime;					
+                cout << endl;	
+				
 			}
+			
+			avgWaitTime = avgWaitTime / processCount;
+			avgTurnAroundTime = avgTurnAroundTime / processCount;
+			cout << endl << "Average Waiting time in milliseconds: " << avgWaitTime;
+			cout << endl << "Average Turnaround time in milliseconds: " << avgTurnAroundTime;
 			
 			cout<< endl << endl << "-----------------------------------------------------------------"; 
 						
