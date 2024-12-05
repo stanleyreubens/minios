@@ -9,6 +9,9 @@
 #include <iomanip>
 #include <chrono>
 
+extern void parseAndCalculate(const std::string& input);
+extern void calculatorFunction();
+
 namespace os_sim {
 
 Simulator& Simulator::getInstance() {
@@ -140,9 +143,17 @@ void Simulator::handleSystemStatus() {
 }
 
 void Simulator::processCommand(const std::string& command) {
+    // Check if the simulator is in calculator mode
+    if (inCalculatorMode_) {
+        // Directly forward the input to the calculator's parseAndCalculate function
+        parseAndCalculate(command);
+        return; // Exit after processing the input in calculator mode
+    }
+
+    // Existing command parsing logic for normal simulator mode
     auto args = parseCommand(command);
     if (args.empty()) return;
-    
+
     std::string cmd = args[0];
     args.erase(args.begin());
     
@@ -196,6 +207,9 @@ void Simulator::setupCommandHandlers() {
     command_handlers_["deadlock"] = [this](const auto& /*args*/) { handleCheckDeadlock(); };
     command_handlers_["status"] = [this](const auto& /*args*/) { handleSystemStatus(); };
     command_handlers_["resources"] = [this](const auto& /*args*/) { handleListResources(); };
+    command_handlers_["suspend"] = [this](const auto& args) { handleSuspendProcess(args); };
+    command_handlers_["resume"] = [this](const auto& args) { handleResumeProcess(args); };
+    command_handlers_["calculator"] = [this](const auto& args) { handleStartCalculator(args); };
 }
 
 void Simulator::displayHelp() {
@@ -209,6 +223,10 @@ void Simulator::displayHelp() {
     std::cout << "  release <pid> <res_id>  - Release a resource from a process\n";
     std::cout << "  deadlock                - Check for deadlocks\n";
     std::cout << "  status                  - Display system status\n";
+    std::cout << "  resources               - List resources\n";
+    std::cout << "  calculator              - Start the calculator process\n"; 
+    std::cout << "  suspend <pid>           - Suspend a process\n";
+    std::cout << "  resume <pid>            - Resume a suspended process\n";
     std::cout << "  exit                    - Exit the simulator\n";
 }
 
@@ -320,6 +338,19 @@ void Simulator::handleAllocateResource(const std::vector<std::string>& args) {
     }
 }
 
+void Simulator::handleStartCalculator(const std::vector<std::string>& /*args*/) {
+    auto& pm = ProcessManager::getInstance();
+    auto process = pm.createProcess("Calculator", 5);
+    std::cout << "Calculator process created with PID " << process->getPID() << "\n";
+
+    inCalculatorMode_ = true; // Enter calculator mode
+
+    // Run calculator function in the current thread for simplicity
+    calculatorFunction();
+
+    inCalculatorMode_ = false; // Exit calculator mode
+}
+
 void Simulator::handleReleaseResource(const std::vector<std::string>& args) {
     if (args.size() < 2) {
         std::cout << "Usage: release <pid> <resource_id>\n";
@@ -334,6 +365,38 @@ void Simulator::handleReleaseResource(const std::vector<std::string>& args) {
         std::cout << "Resource " << rid << " released from process " << pid << "\n";
     } else {
         std::cout << "Failed to release resource " << rid << " from process " << pid << "\n";
+    }
+}
+
+void Simulator::handleSuspendProcess(const std::vector<std::string>& args) {
+    if (args.empty()) {
+        std::cout << "Usage: suspend <pid>\n";
+        return;
+    }
+    
+    ProcessID pid = std::stoi(args[0]);
+    auto& pm = ProcessManager::getInstance();
+    
+    if (pm.suspendProcess(pid) == ErrorCode::SUCCESS) {
+        std::cout << "Process " << pid << " suspended\n";
+    } else {
+        std::cout << "Failed to suspend process " << pid << "\n";
+    }
+}
+
+void Simulator::handleResumeProcess(const std::vector<std::string>& args) {
+    if (args.empty()) {
+        std::cout << "Usage: resume <pid>\n";
+        return;
+    }
+    
+    ProcessID pid = std::stoi(args[0]);
+    auto& pm = ProcessManager::getInstance();
+    
+    if (pm.resumeProcess(pid) == ErrorCode::SUCCESS) {
+        std::cout << "Process " << pid << " resumed\n";
+    } else {
+        std::cout << "Failed to resume process " << pid << "\n";
     }
 }
 
