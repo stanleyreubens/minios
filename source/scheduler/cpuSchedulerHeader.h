@@ -22,6 +22,7 @@
 
 // scheduling algorithm 
 // structs files includes
+#include "prioritySchedulingAlgorithmHeader.cpp"
 #include "roundRobinSchedulingAlgorithmHeader.cpp"
 #include "shortestJobFirstSchedulingAlgorithmHeader.cpp"
 #include "firstComeFirstServerSchedulingAlgorithmHeader.cpp"

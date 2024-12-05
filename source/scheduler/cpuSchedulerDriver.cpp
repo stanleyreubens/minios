@@ -23,8 +23,9 @@ int main(int argc, char* argv[]) {
 	cout<< endl << "-----------------------------------------------------------------"; 
 	cout<< endl << "1. First Come First Serve CPU Scheduling Algorithm"; 
 	cout<< endl << "2. Shortest Job First (Non-Preemptive) CPU Scheduling Algorithm";
-	cout<< endl << "3. Shortest Job First (Preemptive) CPU Scheduling Algorithm";
+    cout<< endl << "3. Priority (Non-Preemptive) CPU Scheduling Algorithm";	
 	cout<< endl << "4. Round Robin CPU Scheduling Algorithm";
+	//cout<< endl << "5. Shortest Job First (Preemptive) CPU Scheduling Algorithm";
 	cout<< endl << endl << "-----------------------------------------------------------------"; 
 	cout<< endl << "Enter option and press enter: ";
 			
@@ -154,29 +155,218 @@ int main(int argc, char* argv[]) {
 	        }
 			
 			cout<< endl << endl << "-----------------------------------------------------------------"; 
-			cout<< endl << "Waiting time & turnaround time:" << endl;
+			cout<< endl << "Process Schedule, Waiting time & turnaround time:" << endl;
 			
 			for(int sjfProcessCounter=0; sjfProcessCounter<processCount; sjfProcessCounter++) {
 				
 				cout << endl << "Process id: " << sjfReadyQueueCpyItem[sjfProcessCounter].processId;				
 				turnAroundTime = turnAroundTime + sjfReadyQueueCpyItem[sjfProcessCounter].burstTime;
+				avgWaitTime = avgWaitTime + waitTime;
+				avgTurnAroundTime = avgTurnAroundTime + turnAroundTime;
 				cout << endl << "Waiting time in milliseconds: " << waitTime;
 				cout << endl << "Turnaround time in milliseconds: " << turnAroundTime;
 				waitTime = waitTime + sjfReadyQueueCpyItem[sjfProcessCounter].burstTime;
+				cout << endl;
 								
 			}
+			
+			avgWaitTime = avgWaitTime / processCount;
+			avgTurnAroundTime = avgTurnAroundTime / processCount;
+			cout << endl << "Average Waiting time in milliseconds: " << avgWaitTime;
+			cout << endl << "Average Turnaround time in milliseconds: " << avgTurnAroundTime;
 			
 			cout<< endl << endl << "-----------------------------------------------------------------"; 
 			
 		    break;
 			
 		case 3:
+		
+		    cout<< endl << "-----------------------------------------------------------------"; 
+	        cout<< endl << "Priority CPU Scheduling Algorithm" << endl;
+			
+			cout<< endl << "-----------------------------------------------------------------"; 
+			cout<< endl << "Enter process related information: " << endl << endl;
+				
+			for(int prProcessCounter=0; prProcessCounter<processCount; prProcessCounter++) {
+				
+				cout << "Process " << prProcessCounter+1 << " id: ";
+				cin >> prReadyQueueItem[prProcessCounter].processId;
+				cout << "Process " << prProcessCounter+1 << " burst time in milliseconds: ";
+				cin >> prReadyQueueItem[prProcessCounter].burstTime;
+				cout << "Process " << prProcessCounter+1 << " priority (lower priority value has highest priority): ";
+				cin >> prReadyQueueItem[prProcessCounter].priority;
+								
+			}
+			
+			cout<< endl << "-----------------------------------------------------------------"; 
+			cout<< endl << "User entered process related information is as follows:" << endl;
+			for(int prProcessCounter=0; prProcessCounter<processCount; prProcessCounter++) {
+				
+				cout << endl << "Process " << prProcessCounter+1 << " id: " << prReadyQueueItem[prProcessCounter].processId;
+				cout << endl << "Process " << prProcessCounter+1 << " burst time in milliseconds: " << prReadyQueueItem[prProcessCounter].burstTime;
+				cout << endl << "Process " << prProcessCounter+1 << " priority: " << prReadyQueueItem[prProcessCounter].priority;
+                prReadyQueueCpyItem[prProcessCounter].processId = prReadyQueueItem[prProcessCounter].processId;
+                prReadyQueueCpyItem[prProcessCounter].burstTime = prReadyQueueItem[prProcessCounter].burstTime;	
+                prReadyQueueCpyItem[prProcessCounter].priority  = prReadyQueueItem[prProcessCounter].priority;					
+							
+			}
+			
+			// code for sorting
+			
+			for(int prProcessCounterOuter=0; prProcessCounterOuter<processCount; prProcessCounterOuter++) {
+			
+				for(int prProcessCounter=0; prProcessCounter<processCount-1;prProcessCounter++) {
+					
+					int iThProcessId, iThBurstTime, iThPriority;	
+																
+					if(prReadyQueueCpyItem[prProcessCounter].priority > prReadyQueueCpyItem[prProcessCounter+1].priority) {
+						
+						iThProcessId = prReadyQueueCpyItem[prProcessCounter].processId;
+						iThBurstTime = prReadyQueueCpyItem[prProcessCounter].burstTime;
+						iThPriority  = prReadyQueueCpyItem[prProcessCounter].priority;
+						
+						prReadyQueueCpyItem[prProcessCounter].processId = prReadyQueueCpyItem[prProcessCounter+1].processId;
+						prReadyQueueCpyItem[prProcessCounter].burstTime = prReadyQueueCpyItem[prProcessCounter+1].burstTime;
+						prReadyQueueCpyItem[prProcessCounter].priority  = prReadyQueueCpyItem[prProcessCounter+1].priority;
+						
+						prReadyQueueCpyItem[prProcessCounter+1].processId = iThProcessId;
+						prReadyQueueCpyItem[prProcessCounter+1].burstTime = iThBurstTime;
+						prReadyQueueCpyItem[prProcessCounter+1].priority  = iThPriority;
+						
+					}
+													
+				}
+				
+	        }
+			
+			cout<< endl << endl << "-----------------------------------------------------------------"; 
+			cout<< endl << "Process Schedule, Waiting time & turnaround time:" << endl;
+			
+			for(int prProcessCounter=0; prProcessCounter<processCount; prProcessCounter++) {
+				
+				cout << endl << "Process id: " << prReadyQueueCpyItem[prProcessCounter].processId;				
+				turnAroundTime = turnAroundTime + prReadyQueueCpyItem[prProcessCounter].burstTime;
+				avgWaitTime = avgWaitTime + waitTime;
+				avgTurnAroundTime = avgTurnAroundTime + turnAroundTime;
+				cout << endl << "Waiting time in milliseconds: " << waitTime;
+				cout << endl << "Turnaround time in milliseconds: " << turnAroundTime;
+				waitTime = waitTime + prReadyQueueCpyItem[prProcessCounter].burstTime;
+				cout << endl;
+								
+			}
+			
+			avgWaitTime = avgWaitTime / processCount;
+			avgTurnAroundTime = avgTurnAroundTime / processCount;
+			cout << endl << "Average Waiting time in milliseconds: " << avgWaitTime;
+			cout << endl << "Average Turnaround time in milliseconds: " << avgTurnAroundTime;
+			
+			cout<< endl << endl << "-----------------------------------------------------------------"; 
+			
+		    break;	
+
+        case 4:
+			
+			cout<< endl << "-----------------------------------------------------------------"; 
+	        cout<< endl << "Pre-emptive Round Robin CPU Scheduling Algorithm" << endl;
+			
+			cout<< endl << "-----------------------------------------------------------------"; 
+		    cout<< endl << "Enter the time quantum in milliseconds: ";
+		    cin >> rrTimeQuantum;
+			
+			cout<< endl << "-----------------------------------------------------------------"; 
+			cout<< endl << "Enter process related information: " << endl << endl;
+				
+			for(int rrProcessCounter=0; rrProcessCounter<processCount; rrProcessCounter++) {
+				
+				cout << "Process " << rrProcessCounter+1 << " id: ";
+				cin >> rrReadyQueueItem[rrProcessCounter].processId;
+				cout << "Process " << rrProcessCounter+1 << " burst time in milliseconds: ";
+				cin >> rrReadyQueueItem[rrProcessCounter].burstTime;
+								
+			}
+			
+			cout<< endl << "-----------------------------------------------------------------"; 
+			cout<< endl << "User entered process related information is as follows:" << endl;
+			for(int rrProcessCounter=0; rrProcessCounter<processCount; rrProcessCounter++) {
+				
+				cout << endl << "Process " << rrProcessCounter+1 << " id: " << rrReadyQueueItem[rrProcessCounter].processId;
+				cout << endl << "Process " << rrProcessCounter+1 << " burst time in milliseconds: " << rrReadyQueueItem[rrProcessCounter].burstTime;
+                rrReadyQueueCpyItem[rrProcessCounter].processId = rrReadyQueueItem[rrProcessCounter].processId;
+                rrReadyQueueCpyItem[rrProcessCounter].burstTime = rrReadyQueueItem[rrProcessCounter].burstTime;					
+							
+			}
+									
+			cout<< endl << endl << "-----------------------------------------------------------------"; 
+			cout<< endl << "Process Schedule, with Process Id and Burst time:" << endl;
+			
+			while (rrIterationRepeatFlag == 1) {
+				
+				if(rrIterationCounter==0) {
+					rrIterationCounter = rrIterationCounter + 1;
+					rrIterationRepeatFlag = 0;
+				} else {
+				    rrIterationCounter = rrIterationCounter + 1;	
+				}
+			
+				for(int rrProcessCounter=0; rrProcessCounter<processCount; rrProcessCounter++) {
+									
+					if(rrReadyQueueCpyItem[rrProcessCounter].burstTime > 0) {
+						
+						if(rrReadyQueueCpyItem[rrProcessCounter].burstTime >= rrTimeQuantum) {
+						
+						    cout << endl << "Process id: " << rrReadyQueueCpyItem[rrProcessCounter].processId << " burst time : "  << rrReadyQueueCpyItem[rrProcessCounter].burstTime;				
+							//cout << endl << "Waiting time in milliseconds: " << waitTime;
+							
+							//turnAroundTime = turnAroundTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;
+							if(rrReadyQueueCpyItem[rrProcessCounter].burstTime >= rrTimeQuantum) {
+								waitTime = waitTime + rrTimeQuantum;
+								rrReadyQueueCpyItem[rrProcessCounter].waitTime = waitTime;
+							} else {
+								waitTime = waitTime + rrReadyQueueCpyItem[rrProcessCounter].burstTime;
+								rrReadyQueueCpyItem[rrProcessCounter].waitTime = waitTime - rrReadyQueueCpyItem[rrProcessCounter].waitTime;
+							}
+														
+							//cout << endl << "Turnaround time in milliseconds: " << turnAroundTime;
+							//waitTime = waitTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;
+						
+						    rrReadyQueueCpyItem[rrProcessCounter].burstTime = rrReadyQueueCpyItem[rrProcessCounter].burstTime - rrTimeQuantum;
+							rrIterationRepeatFlag = 1;
+							cout << endl;
+						
+						} else {
+
+						    cout << endl << "Process id: " << rrReadyQueueCpyItem[rrProcessCounter].processId << " burst time : "  << rrReadyQueueCpyItem[rrProcessCounter].burstTime;				
+                            //cout << endl << "Waiting time in milliseconds: " << waitTime;
+							waitTime = waitTime + rrReadyQueueCpyItem[rrProcessCounter].burstTime;
+							rrReadyQueueCpyItem[rrProcessCounter].waitTime = waitTime;
+							rrReadyQueueCpyItem[rrProcessCounter].burstTime = 0;
+                            cout << endl;							
+							
+						}	
+																		
+					} else {
+						
+					    if(rrIterationCounter > 100) {
+							rrIterationRepeatFlag = 0;
+						}	
+						
+					}
+									
+				}
+				
+			}		
+			
+			cout<< endl << endl << "-----------------------------------------------------------------"; 
+					    		
+			break; 		
+		
+		case 5:
 			
 			cout<< endl << "-----------------------------------------------------------------"; 
 	        cout<< endl << "Pre-emptive Shortest Job First CPU Scheduling Algorithm" << endl;
 			
 			cout<< endl << "-----------------------------------------------------------------"; 
-		    cout<< endl << "Enter the time quantum  in milliseconds: ";
+		    cout<< endl << "Enter the time quantum in milliseconds: ";
 		    cin >> timeQuantum;
 			
 			cout<< endl << "-----------------------------------------------------------------"; 
@@ -228,7 +418,7 @@ int main(int argc, char* argv[]) {
 	        }
 			
 			cout<< endl << endl << "-----------------------------------------------------------------"; 
-			cout<< endl << "Waiting time & turnaround time:" << endl;
+			cout<< endl << "Process Schedule, Waiting time & turnaround time:" << endl;
 			
 			while (iterationRepeatFlag == 1) {
 				
@@ -246,20 +436,45 @@ int main(int argc, char* argv[]) {
 						if(sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime >= timeQuantum) {
 						
 						    cout << endl << "Process id: " << sjfPreReadyQueueCpyItem[sjfPreProcessCounter].processId << " burst time : "  << sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;				
-							//turnAroundTime = turnAroundTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;
-							//cout << endl << "Waiting time in milliseconds: " << waitTime;
-							//cout << endl << "Turnaround time in milliseconds: " << turnAroundTime;
-							//waitTime = waitTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;
-						
-						    sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime = sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime - timeQuantum;
+																					
+							if(sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime >= timeQuantum) {
+								turnAroundTime = turnAroundTime + timeQuantum;
+							} else {
+							    turnAroundTime = turnAroundTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;								
+							}
+							cout << endl << "Waiting time in milliseconds: " << waitTime;
+							cout << endl << "Turnaround time in milliseconds: " << turnAroundTime;
+							
+                            avgWaitTime = avgWaitTime + waitTime;
+							cout << endl << " Intermediate Avg Wait Time : " << avgWaitTime;							
+						   
+							if(sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime >= timeQuantum) {
+								waitTime = waitTime + timeQuantum;
+							} else {
+								waitTime = waitTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;							    								
+							}
+							
+							sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime = sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime - timeQuantum;
+							
+							
+				            avgTurnAroundTime = avgTurnAroundTime + turnAroundTime;
 							iterationRepeatFlag = 1;
 						
 						} else {
 
 						    cout << endl << "Process id: " << sjfPreReadyQueueCpyItem[sjfPreProcessCounter].processId << " burst time : "  << sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;				
-                            sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime = 0;							
+                            turnAroundTime = sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;							
+							cout << endl << "Waiting time in milliseconds: " << waitTime;
+							cout << endl << "Turnaround time in milliseconds: " << turnAroundTime;
+							waitTime = waitTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;
+							sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime = 0;
+                            avgWaitTime = avgWaitTime + waitTime;
+							cout << endl << " Intermediate Avg Wait Time : " << avgWaitTime;
+				            avgTurnAroundTime = avgTurnAroundTime + turnAroundTime;							
 							
-						}	
+						}
+
+                        cout<< endl;						
 																		
 					} else {
 						
@@ -268,92 +483,18 @@ int main(int argc, char* argv[]) {
 						}	
 						
 					}
+					
+					
 									
 				}
 				
 			}	
 			
-			cout<< endl << endl << "-----------------------------------------------------------------"; 
-					    		
-			break;
-		
-		case 4:
-			
-			cout<< endl << "-----------------------------------------------------------------"; 
-	        cout<< endl << "Pre-emptive Round Robin CPU Scheduling Algorithm" << endl;
-			
-			cout<< endl << "-----------------------------------------------------------------"; 
-		    cout<< endl << "Enter the time quantum  in milliseconds: ";
-		    cin >> rrTimeQuantum;
-			
-			cout<< endl << "-----------------------------------------------------------------"; 
-			cout<< endl << "Enter process related information: " << endl << endl;
-				
-			for(int rrProcessCounter=0; rrProcessCounter<processCount; rrProcessCounter++) {
-				
-				cout << "Process " << rrProcessCounter+1 << " id: ";
-				cin >> rrReadyQueueItem[rrProcessCounter].processId;
-				cout << "Process " << rrProcessCounter+1 << " burst time in milliseconds: ";
-				cin >> rrReadyQueueItem[rrProcessCounter].burstTime;
-								
-			}
-			
-			cout<< endl << "-----------------------------------------------------------------"; 
-			cout<< endl << "User entered process related information is as follows:" << endl;
-			for(int rrProcessCounter=0; rrProcessCounter<processCount; rrProcessCounter++) {
-				
-				cout << endl << "Process " << rrProcessCounter+1 << " id: " << rrReadyQueueItem[rrProcessCounter].processId;
-				cout << endl << "Process " << rrProcessCounter+1 << " burst time in milliseconds: " << rrReadyQueueItem[rrProcessCounter].burstTime;
-                rrReadyQueueCpyItem[rrProcessCounter].processId = rrReadyQueueItem[rrProcessCounter].processId;
-                rrReadyQueueCpyItem[rrProcessCounter].burstTime = rrReadyQueueItem[rrProcessCounter].burstTime;					
-							
-			}
-									
-			cout<< endl << endl << "-----------------------------------------------------------------"; 
-			cout<< endl << "Waiting time & turnaround time:" << endl;
-			
-			while (rrIterationRepeatFlag == 1) {
-				
-				if(rrIterationCounter==0) {
-					rrIterationCounter = rrIterationCounter + 1;
-					rrIterationRepeatFlag = 0;
-				} else {
-				    rrIterationCounter = rrIterationCounter + 1;	
-				}
-			
-				for(int rrProcessCounter=0; rrProcessCounter<processCount; rrProcessCounter++) {
-									
-					if(rrReadyQueueCpyItem[rrProcessCounter].burstTime > 0) {
-						
-						if(rrReadyQueueCpyItem[rrProcessCounter].burstTime >= timeQuantum) {
-						
-						    cout << endl << "Process id: " << rrReadyQueueCpyItem[rrProcessCounter].processId << " burst time : "  << rrReadyQueueCpyItem[rrProcessCounter].burstTime;				
-							//turnAroundTime = turnAroundTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;
-							//cout << endl << "Waiting time in milliseconds: " << waitTime;
-							//cout << endl << "Turnaround time in milliseconds: " << turnAroundTime;
-							//waitTime = waitTime + sjfPreReadyQueueCpyItem[sjfPreProcessCounter].burstTime;
-						
-						    rrReadyQueueCpyItem[rrProcessCounter].burstTime = rrReadyQueueCpyItem[rrProcessCounter].burstTime - timeQuantum;
-							rrIterationRepeatFlag = 1;
-						
-						} else {
-
-						    cout << endl << "Process id: " << rrReadyQueueCpyItem[rrProcessCounter].processId << " burst time : "  << rrReadyQueueCpyItem[rrProcessCounter].burstTime;				
-                            rrReadyQueueCpyItem[rrProcessCounter].burstTime = 0;							
-							
-						}	
-																		
-					} else {
-						
-					    if(rrIterationCounter > 100) {
-							rrIterationRepeatFlag = 0;
-						}	
-						
-					}
-									
-				}
-				
-			}	
+			cout << endl << " Final Intermediate Avg Wait Time : " << avgWaitTime << " Process count : " << processCount ;
+			avgWaitTime = avgWaitTime / processCount;
+			avgTurnAroundTime = avgTurnAroundTime / processCount;
+			cout << endl << "Average Waiting time in milliseconds: " << avgWaitTime;
+			cout << endl << "Average Turnaround time in milliseconds: " << avgTurnAroundTime;
 			
 			cout<< endl << endl << "-----------------------------------------------------------------"; 
 					    		
