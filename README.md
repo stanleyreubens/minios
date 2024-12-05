@@ -169,13 +169,13 @@ chmod +x freebsd_build.sh
 # Here's a checklist link of the completed requirements
 https://scandalous-droplet-fe4.notion.site/COSC-514-PROJECT-CHECKLIST-146477d01f628041af87faea91d75176
 
-# Useage Expamles
+# Usage Expamle 1
 ```
 # First check resources
 os_sim> resources
 
 # Create some processes
-os_sim> create process1 10
+os_sim> create process1 12
 os_sim> create process2 5
 
 # Try allocating resources
@@ -189,7 +189,10 @@ os_sim> status
 os_sim> allocate 0 1
 os_sim> allocate 1 0
 os_sim> deadlock
+```
 
+# Usage Example 2
+```
 # Start the calculator process
 os_sim> calculator
 
@@ -202,6 +205,8 @@ Result: 100
 
 # Exit back to the main simulator
 os_sim>
+```
+
 
 # Design Decisions
 
