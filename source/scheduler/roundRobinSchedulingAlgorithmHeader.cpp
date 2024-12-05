@@ -12,6 +12,8 @@ struct RrReadyQueue {
 
     int burstTime;
     int processId;
+	float waitTime=0;
+	float turnAroundTime=0;
 
 };
 
